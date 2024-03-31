@@ -3,10 +3,10 @@
 #include "secrets.h"
 #include "ThingSpeak.h"
 
-#define DHTPIN 2     // Pin connected to DHT sensor
-#define DHTTYPE DHT11   // Type of DHT sensor
-#define TEMP_ALARM_LOW 20  // Lower temperature threshold for alarm
-#define TEMP_ALARM_HIGH 30 // Upper temperature threshold for alarm
+#define DHTPIN 2     
+#define DHTTYPE DHT11   
+#define TEMP_ALARM_LOW 20 
+#define TEMP_ALARM_HIGH 30
 
 DHT dht(DHTPIN, DHTTYPE);
 WiFiClient client;
@@ -52,14 +52,13 @@ void loop() {
   if (temperature < TEMP_ALARM_LOW || temperature > TEMP_ALARM_HIGH) {
     // Temperature is outside the alarm range, trigger alarm
     Serial.println("Temperature is outside the alarm range!");
-    // Here you can add code to trigger an alarm, such as sending an email or turning on a buzzer
+   
   }
 
   // Set the fields with temperature and humidity data
   ThingSpeak.setField(1, temperature);
   ThingSpeak.setField(2, humidity);
 
-  // Write to ThingSpeak channel
   int x = ThingSpeak.writeFields(SECRET_CH_ID, SECRET_WRITE_APIKEY);
   if (x == 200) {
     Serial.println("Channel update successful.");
@@ -67,6 +66,5 @@ void loop() {
     Serial.println("Problem updating channel. HTTP error code " + String(x));
   }
 
-  // Wait for 20 seconds before updating again
   delay(20000);
 }
